@@ -1,0 +1,8 @@
+library(readxl)
+
+imf_datasets <- read_excel(
+  "R/imf_datasets.xlsx",
+  col_names = c('.names', '.indicators')
+)
+
+save(imf_datasets, file = 'data/imf_datasets.rdata')
