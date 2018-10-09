@@ -17,7 +17,7 @@ imf_from_quandl(countries, indicators, ...)
 A tidy \code{tibble}.
 }
 \description{
-A wrapper around \code{\link[Quandl:Quandl]{Quandl}}. Downloads macroeconomic data for several indicators and countries covered by IMF in just one line of code.
+A wrapper around \code{Quandl}. Downloads macroeconomic data for several indicators and countries covered by IMF in just one line of code.
 }
 \details{
 The \code{countries} argument can be passed as an ISO code or as a country name. The only requirement is that the call must be consistent (must contain only ISO codes or country names, but not both).
@@ -51,12 +51,12 @@ The full list of options parameters can be seen at \url{https://docs.quandl.com/
 }
 \examples{
 # Download the Unemployment rate for all countries in Latin America
-imf_from_quandl(countries = latin_america_and_caribbean, indicators = 'LUR')
+imf_from_quandl(countries = 'latam', indicators = 'LUR')
 
 # Download the Savings and the Current Account for all countries in the G7
-imf_from_quandl(countries = g7, indicators = c('NGSD_NGDP', 'BCA_NGDPD'))
+imf_from_quandl(countries = 'g7', indicators = c('NGSD_NGDP', 'BCA_NGDPD'))
 
-Download the Output Gap (\% of potential GDP)
+# Download the Output Gap
 imf_from_quandl('United States', 'NGAP_NPGDP')
-# imf_from_quandl('USA', 'NGAP_NPGDP') # identical to the code above
+imf_from_quandl('USA', 'NGAP_NPGDP') # identical to the code above
 }

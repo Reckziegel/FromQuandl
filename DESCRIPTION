@@ -7,7 +7,7 @@ Maintainer: Bernardo Reckziegel <bernardo_cse@hotmail.com>
 Description: 'FromQuandl' package is designed to minimize the efforts
     of downloading and manipulating datasets that come from the 'Quandl' 
     package. It allows you to easly construct 'ggplot' objects and work 
-    with all the 'tidyverse' verbs. 
+    with the 'tidyverse' verbs. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -16,11 +16,14 @@ Depends:
     R (>= 3.5.0),
     Quandl,
     tidyverse, 
+    tibbletime
+Imports:
     dplyr, 
-    forcats, 
+    forcats,
+    magrittr,
     purrr, 
     readr, 
     rlang, 
     stringr, 
     tibble, 
-    tibbletime
+    tidyr

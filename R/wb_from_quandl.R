@@ -41,10 +41,11 @@
 #' @export
 #'
 #' @examples
-#' wb_from_quandl(countries = c('CAN', USA'), indicator = 'poverty')
+#' library(FromQuandl)
+#' wb_from_quandl(countries = c('CAN', 'USA'), indicator = 'poverty')
 #'
 #' # the function arguments are case insensitive
-#' wb_from_quandl(countries = g7, indicators = 'develOPMENT', start_date = '2016-01-01)
+#' wb_from_quandl(countries = 'g7', indicators = 'develOPMENT', start_date = '2016-01-01)
 wb_from_quandl <- function(countries, indicators, ...) {
 
 
@@ -183,15 +184,21 @@ wb_from_quandl <- function(countries, indicators, ...) {
 
 
   # select specific countries?
+  regions <- c('ae', 'oae', 'euro', 'eu', 'ede', 'g7', 'cis', 'dea', 'asean_5', 'edeuro', 'latam', 'me', 'ssa')
   if (!purrr::is_null(countries)) {
 
-    if (max(stringr::str_count(countries)) <= 3) {
+    if (max(stringr::str_count(countries)) <= 3 && !(countries %in% regions)) {
 
       countries <- stringr::str_to_upper(countries) %>%
         stringr::str_trim(., side = 'both')
 
       country_codes <- country_codes %>%
         dplyr::filter(iso %in%  as.vector(countries))
+
+    } else if (countries %in% regions) {
+
+      countries <- country_groups(countries) %>%
+        stringr::str_trim(., side = 'both')
 
     } else {
 

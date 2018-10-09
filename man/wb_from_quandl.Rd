@@ -50,9 +50,3 @@ The \code{...} argument can be used to calibrate the query parameters. It accept
 
 The full list can be seen at: \url{https://docs.quandl.com/docs/r}.
 }
-\examples{
-wb_from_quandl(countries = c('CAN', USA'), indicator = 'poverty')
-
-# case insensitive
-wb_from_quandl(countries = g7, indicators = 'develOPMENT', start_date = '2016-01-01)
-}

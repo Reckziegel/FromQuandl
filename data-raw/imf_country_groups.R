@@ -1,6 +1,3 @@
-country_groups <- function()
-
-
 advanced_economies <- list('Australia', 'Austria', 'Belgium', 'Canada', 'Cyprus', 'Czech Republic', 'Denmark',
                         'Estonia', 'Finland', 'France', 'Germany', 'Greece', 'Hong Kong SAR', 'Iceland',
                         'Ireland', 'Israel', 'Italy', 'Japan', 'Korea', 'Latvia', 'Lithuania', 'Luxembourg',
@@ -89,10 +86,5 @@ sub_saharan_africa <- list('Angola', 'Benin', 'Botswana', 'Burkina Faso', 'Burun
                         'Sierra Leone', 'South Africa', 'South Sudan', 'Swaziland', 'Tanzania', 'Togo',
                         'Uganda', 'Zambia', 'Zimbabwe')
 
-devtools::use_data(advanced_economies, asean_5, commonwealth_independent_states, emerging_and_developing_asia,
-                   emerging_and_developing_economies, emerging_and_developing_europe, euro_area, european_union,
-                   g7, latin_america_and_caribbean, middle_east, other_advanced_economies, sub_saharan_africa,
-                   internal = TRUE,
-                   overwrite = TRUE)
 
 
