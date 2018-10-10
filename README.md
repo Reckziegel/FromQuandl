@@ -3,7 +3,7 @@
 FromQuandl
 ==========
 
-The goal of FromQuandl is to easy the search, download and data preprocessing that often happen when using the `Quandl` package in R.
+The goal of FromQuandl is to easy the search, download and data preprocess that often happen when using the `Quandl` package in R.
 
 Installation
 ------------
@@ -15,10 +15,10 @@ You can install FromQuandl from github with:
 devtools::install_github("Reckziegel/FromQuandl")
 ```
 
-Example2
+Examples
 --------
 
-Suppose you would like to download the Current Account Balance (as % of GDP) for all countries of a specific region or with a similar economic characteristic, like the G7, for example. Use the `imf_search()` function to discover the Current Accounts code.
+Suppose you would like to download the Current Account Balance (as % of GDP) for all countries of a specific region or with similar economic characteristics, like the G7. Use the `imf_search()` function to discover the Current Account code in `Quandl`.
 
 ``` r
 library(FromQuandl)
@@ -30,10 +30,12 @@ imf_search('account')
 #> 2 current account balance, usd billions BCA
 ```
 
-Next use `imf_from_quandl()` to download this data.
+Next use `imf_from_quandl()` to download and plot the data.
 
 ``` r
 library(FromQuandl)
+library(ggthemes)
+
 ca <- imf_from_quandl(countries = 'g7', indicators = 'BCA_NGDPD', start_date = '2008-01-01')
 ca
 #> # A tibble: 105 x 6
@@ -50,19 +52,12 @@ ca
 #>  9 2016-12-31 CAN   Canada  BCA_NGDPD -3.34  Current Account Balance, % o~
 #> 10 2017-12-31 CAN   Canada  BCA_NGDPD -2.92  Current Account Balance, % o~
 #> # ... with 95 more rows
-```
 
-The result is a `tibble` that it's ready to be used in `ggplot2`.
-
-``` r
-library(ggplot2)
-library(ggthemes)
-
-ca %>%
-  ggplot(aes(date, value, color = country)) + 
+ca %>% 
+   ggplot(aes(date, value, color = country)) + 
   geom_line(size = 1, show.legend = FALSE) + 
   geom_hline(aes(yintercept = 0), color = 'red', linetype = 'dashed', alpha = 0.3) + 
-  facet_wrap(~country, scale = "free_y") + 
+  facet_wrap(~ country, scale = "free_y") + 
   labs(title    = "Current Account Balance (% of GDP)",
        subtitle = "G7 Countries From 2005-01-01 through 2018-09-10",
        caption  = "Source: International Monetary Found (IMF).") + 
@@ -70,21 +65,19 @@ ca %>%
   scale_color_gdocs()
 ```
 
-![](README-example2-1.png)
+![](README-example%201-1.png)
 
-There is no need to restrict the download to only one indicator, just add a vector or a list of characters strings in the `indicators` argument and the function will work in the same way. But be aware that may be safe using `Quandl.api_key()` if you want to get too many series.
+The result is a `tibble` that it's ready to be used in `ggplot2`.
 
-As a second example imagine that you want to plot the poverty statistics from the World Bank for all countries in the Commonwealth of Independent States. Simply run
+There is no need to restrict the download to only one indicator. The `indicators` argument supports lists and vectors of strings as well, but be aware that may be safe using `Quandl.api_key()` if you want to access too many series.
+
+As a second example imagine that you want to downalod the poverty statistics from the World Bank for all countries in the Commonwealth of Independent States. Simply run
 
 ``` r
 library(FromQuandl)
-library(ggplot2)
-library(ggthemes)
 
-# download the data
-poverty <- wb_from_quandl('cis', 'poverty')
-poverty
-#> # A tibble: 367 x 4
+wb_from_quandl('cis', 'poverty') 
+#> # A tibble: 488 x 4
 #>    date       country indicator                                       value
 #>    <date>     <fct>   <fct>                                           <dbl>
 #>  1 1996-12-31 Albania Number of poor at $1.25 a day (PPP) (millions)  0.495
@@ -97,28 +90,12 @@ poverty
 #>  8 1995-12-31 Algeria Number of poor at $1.25 a day (PPP) (millions) 18.5  
 #>  9 2000-12-31 Angola  Number of poor at $1.25 a day (PPP) (millions) 61.6  
 #> 10 2008-12-31 Angola  Number of poor at $1.25 a day (PPP) (millions) 56.8  
-#> # ... with 357 more rows
+#> # ... with 478 more rows
 ```
 
-``` r
-library(ggplot2)
-library(ggthemes)
+The data is *tidy* and ready to be used with the `%>%` operatior.
 
-# If you want a plot
-poverty %>%
-  ggplot(aes(date, value)) +
-  geom_line(aes(color = country), size = 1) +
-  facet_wrap(~indicator, ncol = 3) +
-  labs(title    = "Commonwealth of Independent States",
-       subtitle = "Poverty Indicators From 2005-01-01 through 2018-09-10",
-       caption  = "Source: World Bank (WB).",
-       x        = "",
-       y        = "") +
-  theme_tufte() +
-  scale_color_brewer(palette = 'Set3')
-```
-
-![](README-example%204-1.png)
+Additional information about the `imf_from_quandl()`and `wb_from_quandl()` can be found at the package documenation.
 
 Future Developments
 -------------------
