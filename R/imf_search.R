@@ -27,16 +27,18 @@ imf_search <- function(query, print_all = TRUE) {
   query <- stringr::str_to_lower(query) %>%
     stringr::str_trim(., side = 'both')
 
-  search_imf_tbl <- readr::read_csv(
-    file = "data-raw/imf_datasets.csv",
-    col_types = readr::cols(
-      `Indicator Code` = readr::col_character(),
-      `Indicator Name` = readr::col_character()
-    )
-  ) %>%
+  # search_imf_tbl <- readr::read_csv(
+  #   file = "data-raw/imf_datasets.csv",
+  #   col_types = readr::cols(
+  #     `Indicator Code` = readr::col_character(),
+  #     `Indicator Name` = readr::col_character()
+  #    )
+  #   )
+
+  search_imf_tbl <- imf_datasets %>%
     dplyr::rename(
-      indicator = `Indicator Name`,
-      code      = `Indicator Code`
+      indicator = `.names`,
+      code      = `.indicators`
     ) %>%
     dplyr::mutate(indicator = stringr::str_to_lower(indicator))
 

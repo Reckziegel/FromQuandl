@@ -1,6 +1,6 @@
 library(readxl)
 
-imf_datasets <- read_excel(
+imf_datasets <- readxl::read_excel(
   "R/imf_datasets.xlsx",
   col_names = c('.names', '.indicators')
 )
