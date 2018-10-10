@@ -7,19 +7,19 @@
 #' Sometimes the user may be interested in downloading data for certain regions, like Europe, Latin America, Middle East, etc. For that reason, the countries argument also accepts the following calls:
 #'
 #' \itemize{
-#'   \item advanced_economics
-#'   \item asean_5
-#'   \item commonwealth_independent_states
-#'   \item emerging_and_developing_asia
-#'   \item emerging_and_developing_economies
-#'   \item emerging_and_developing_europe
-#'   \item euro_area
-#'   \item european_union
-#'   \item g7
-#'   \item latin_america_and_caribbean
-#'   \item middle_east
-#'   \item other_advanced_economies
-#'   \item sub_saharan_africa
+#'   \item 'ae' - advanced_economics
+#'   \item 'asean_5' - asean_5
+#'   \item 'cis' - commonwealth_independent_states
+#'   \item 'eda' - emerging_and_developing_asia
+#'   \item 'ede' - emerging_and_developing_economies
+#'   \item  'edeuro' - emerging_and_developing_europe
+#'   \item 'euro' - euro_area
+#'   \item 'eu' - european_union
+#'   \item 'g7' - g7
+#'   \item 'latam' - latin_america_and_caribbean
+#'   \item 'me' - middle_east
+#'   \item 'oae' - other_advanced_economies
+#'   \item 'ssa' - sub_saharan_africa
 #'}
 #'
 #'For any of those calls the \code{imf_from_quandl()} will download data for all the countries in the requested region. A complete region list can be seen at: \url{https://www.imf.org/external/pubs/ft/weo/2018/01/weodata/groups.htm}.
@@ -197,8 +197,8 @@ wb_from_quandl <- function(countries, indicators, ...) {
 
     } else if (countries %in% regions) {
 
-      countries <- country_groups(countries) %>%
-        stringr::str_trim(., side = 'both')
+      country_codes <- country_codes %>%
+        filter(country %in% country_groups(countries))
 
     } else {
 

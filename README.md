@@ -3,7 +3,7 @@
 FromQuandl
 ==========
 
-The goal of FromQuandl is to easy the seach, download and data preprocessing that often happen when using the `Quandl` package in R.
+The goal of FromQuandl is to easy the search, download and data preprocessing that often happen when using the `Quandl` package in R.
 
 Installation
 ------------
@@ -15,13 +15,19 @@ You can install FromQuandl from github with:
 devtools::install_github("Reckziegel/FromQuandl")
 ```
 
-Example
--------
+Example2
+--------
 
 Suppose you would like to download the Current Account Balance (as % of GDP) for all countries of a specific region or with a similar economic characteristic, like the G7, for example. Use the `imf_search()` function to discover the Current Accounts code.
 
 ``` r
-FromQuandl::imf_search('account')
+library(FromQuandl)
+imf_search('account')
+#> # A tibble: 2 x 2
+#>   indicator                             code     
+#>   <chr>                                 <chr>    
+#> 1 current account balance, % of gdp     BCA_NGDPD
+#> 2 current account balance, usd billions BCA
 ```
 
 Next use `imf_from_quandl()` to download this data.
@@ -65,3 +71,56 @@ ca %>%
 ```
 
 ![](README-example2-1.png)
+
+There is no need to restrict the download to only one indicator, just add a vector or a list of characters strings in the `indicators` argument and the function will work in the same way. But be aware that may be safe using `Quandl.api_key()` if you want to get too many series.
+
+As a second example imagine that you want to plot the poverty statistics from the World Bank for all countries in the Commonwealth of Independent States. Simply run
+
+``` r
+library(FromQuandl)
+library(ggplot2)
+library(ggthemes)
+
+# download the data
+poverty <- wb_from_quandl('cis', 'poverty')
+poverty
+#> # A tibble: 367 x 4
+#>    date       country indicator                                       value
+#>    <date>     <fct>   <fct>                                           <dbl>
+#>  1 1996-12-31 Albania Number of poor at $1.25 a day (PPP) (millions)  0.495
+#>  2 2002-12-31 Albania Number of poor at $1.25 a day (PPP) (millions)  0.450
+#>  3 2004-12-31 Albania Number of poor at $1.25 a day (PPP) (millions)  0.390
+#>  4 2005-12-31 Albania Number of poor at $1.25 a day (PPP) (millions)  0.337
+#>  5 2008-12-31 Albania Number of poor at $1.25 a day (PPP) (millions)  0.179
+#>  6 2012-12-31 Albania Number of poor at $1.25 a day (PPP) (millions)  0.194
+#>  7 1988-12-31 Algeria Number of poor at $1.25 a day (PPP) (millions) 16.4  
+#>  8 1995-12-31 Algeria Number of poor at $1.25 a day (PPP) (millions) 18.5  
+#>  9 2000-12-31 Angola  Number of poor at $1.25 a day (PPP) (millions) 61.6  
+#> 10 2008-12-31 Angola  Number of poor at $1.25 a day (PPP) (millions) 56.8  
+#> # ... with 357 more rows
+```
+
+``` r
+library(ggplot2)
+library(ggthemes)
+
+# If you want a plot
+poverty %>%
+  ggplot(aes(date, value)) +
+  geom_line(aes(color = country), size = 1) +
+  facet_wrap(~indicator, ncol = 3) +
+  labs(title    = "Commonwealth of Independent States",
+       subtitle = "Poverty Indicators From 2005-01-01 through 2018-09-10",
+       caption  = "Source: World Bank (WB).",
+       x        = "",
+       y        = "") +
+  theme_tufte() +
+  scale_color_brewer(palette = 'Set3')
+```
+
+![](README-example%204-1.png)
+
+Future Developments
+-------------------
+
+This is a work in progress. Very soon the package will have a function to download the components of the most important stock indexes in US. Suggestions are welcome, :-).

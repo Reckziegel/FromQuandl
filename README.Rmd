@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 # FromQuandl
 
-The goal of FromQuandl is to easy the seach, download and data preprocessing that often happen when using the `Quandl` package in R.    
+The goal of FromQuandl is to easy the search, download and data preprocessing that often happen when using the `Quandl` package in R.    
 
 ## Installation
 
@@ -27,12 +27,13 @@ You can install FromQuandl from github with:
 devtools::install_github("Reckziegel/FromQuandl")
 ```
 
-## Example
+## Example2 
 
 Suppose you would like to download the Current Account Balance (as % of GDP) for all countries of a specific region or with a similar economic characteristic, like the G7, for example. Use the `imf_search()` function to discover the Current Accounts code. 
 
-```{r example, eval = FALSE}
-FromQuandl::imf_search('account')
+```{r example }
+library(FromQuandl)
+imf_search('account')
 ```
 
 Next use `imf_from_quandl()` to download this data. 
@@ -61,3 +62,46 @@ ca %>%
   scale_color_gdocs()
 
 ```
+
+There is no need to restrict the download to only one indicator. The `indicators` argument supports lists and vectors of strings as well. But be aware that may be safe using `Quandl.api_key()` if you want to access too many series.   
+
+As a second example imagine that you want to plot the poverty statistics from the World Bank for all countries in the Commonwealth of Independent States. Simply run
+
+```{r example3}
+library(FromQuandl)
+library(ggplot2)
+library(ggthemes)
+
+# download the data
+poverty <- wb_from_quandl('cis', 'poverty')
+poverty
+```
+
+
+And the `poverty` object can be used right away with `ggplot2`
+
+
+```{r example 4}
+
+library(ggplot2)
+library(ggthemes)
+
+poverty %>%
+  ggplot(aes(date, value)) +
+  geom_line(aes(color = country), size = 1) +
+  facet_wrap(~indicator, ncol = 3) +
+  labs(title    = "Commonwealth of Independent States",
+       subtitle = "Poverty Indicators From 2005-01-01 through 2018-09-10",
+       caption  = "Source: World Bank (WB).",
+       x        = "",
+       y        = "") +
+  theme_tufte() +
+  scale_color_brewer(palette = 'Set3')
+
+```
+
+
+
+## Future Developments
+
+This is a work in progress. Very soon the package will have a function to download the components of the most important stock indexes in US. Suggestions are welcome, :-).
