@@ -77,7 +77,7 @@ As a second example imagine that you want to downalod the poverty statistics fro
 library(FromQuandl)
 
 wb_from_quandl('cis', 'poverty') 
-#> # A tibble: 488 x 4
+#> # A tibble: 270 x 4
 #>    date       country indicator                                       value
 #>    <date>     <fct>   <fct>                                           <dbl>
 #>  1 1996-12-31 Albania Number of poor at $1.25 a day (PPP) (millions)  0.495
@@ -90,7 +90,7 @@ wb_from_quandl('cis', 'poverty')
 #>  8 1995-12-31 Algeria Number of poor at $1.25 a day (PPP) (millions) 18.5  
 #>  9 2000-12-31 Angola  Number of poor at $1.25 a day (PPP) (millions) 61.6  
 #> 10 2008-12-31 Angola  Number of poor at $1.25 a day (PPP) (millions) 56.8  
-#> # ... with 478 more rows
+#> # ... with 260 more rows
 ```
 
 The data is *tidy* and ready to be used with the `%>%` operatior.

@@ -57,7 +57,7 @@ ca %>%
   scale_color_gdocs()
 
 ```
-
+ 
 The result is a `tibble` that it's ready to be used in `ggplot2`. 
 
 There is no need to restrict the download to only one indicator. The `indicators` argument supports lists and vectors of strings as well, but be aware that may be safe using `Quandl.api_key()` if you want to access too many series.   
