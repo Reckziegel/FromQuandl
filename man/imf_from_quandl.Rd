@@ -11,52 +11,54 @@ imf_from_quandl(countries, indicators, ...)
 
 \item{indicators}{A vector or a list of character strings.}
 
-\item{...}{Additional arguments to be passed into \code{Quandl} function.}
+\item{...}{Additional arguments to be passed into `Quandl` function.}
 }
 \value{
-A tidy \code{tibble}.
+A tidy `tibble`.
 }
 \description{
-A wrapper around \code{Quandl}. Downloads macroeconomic data for several indicators and countries covered by IMF in just one line of code.
+A wrapper around `Quandl`. Downloads macroeconomic data for several indicators and countries covered by IMF in just one line of code.
 }
 \details{
-The \code{countries} argument can be passed as an ISO code or as a country name. The only requirement is that the call must be consistent (must contain only ISO codes or country names, but not both).
+The `countries` argument can be passed as an ISO code or as a country name. The only requirement is that the call must be consistent (must contain only ISO codes or country names, but not both).
 
 Sometimes the user may be interested in downloading data for certain regions, like Europe, Latin America, Middle East, etc. For that reason, the countries argument also accepts the following calls:
+
 \itemize{
-  \item advanced_economics
-  \item asean_5
-  \item commonwealth_independent_states
-  \item emerging_and_developing_asia
-  \item emerging_and_developing_economies
-  \item emerging_and_developing_europe
-  \item euro_area
-  \item european_union
-  \item g7
-  \item latin_america_and_caribbean
-  \item middle_east
-  \item other_advanced_economies
-  \item sub_saharan_africa
+  \item 'ae'     - Advanced Economics
+  \item 'asean_5'- Asean Top 5
+  \item 'cis'    - Commonwealth and Independent States
+  \item 'eda'    - Emerging and Developing Asia
+  \item 'ede'    - Emerging and Developing Economies
+  \item 'edeuro' - Emerging and Developing Europe
+  \item 'euro'   - Euro Area
+  \item 'eu'     - European Union
+  \item 'g7'     - G7
+  \item 'latam'  - Latin America & Caribbean
+  \item 'me'     - Middle East
+  \item 'oae'    - Other Advanced Economies
+  \item 'ssa'    - Sub Saharan Africa
 }
 
-For any of those calls the \code{imf_from_quandl()} will download data for all the countries in the requested region. A complete region list can be seen at: \url{https://www.imf.org/external/pubs/ft/weo/2018/01/weodata/groups.htm}.
+For any of those calls the `imf_from_quandl()` will download data for all the countries in the requested region. A complete region list can be seen at: \url{https://www.imf.org/external/pubs/ft/weo/2018/01/weodata/groups.htm}.
 
-The \code{...} argument can be used to calibrate the query parameters. It accepts the following calls:
+The `...` argument can be used to calibrate the query parameters. It accepts the following calls:
 \itemize{
- \item \code{start_date} and \code{end_date}, if you which to filter time series:
- \item \code{collapse} and \code{transform}, if you which to preprocess the data
+ \item \code{start_date}: \code{'YYYY-MM-DD'}
+ \item \code{end_date}: \code{'YYYY-MM-DD'}
+ \item \code{collapse}: \code{c("", "daily", "weekly", "monthly", "quarterly", "annual")}
+ \item \code{transform}: \code{c("", "diff", "rdiff", "normalize", "cumul", "rdiff_from")}
 }
 
-The full list of options parameters can be seen at \url{https://docs.quandl.com/docs/r}.
+The full list can be seen at: \url{https://docs.quandl.com/docs/r}.
 }
 \examples{
 # Download the Unemployment rate for all countries in Latin America
 imf_from_quandl(countries = 'latam', indicators = 'LUR')
-
 # Download the Savings and the Current Account for all countries in the G7
 imf_from_quandl(countries = 'g7', indicators = c('NGSD_NGDP', 'BCA_NGDPD'))
-
 # Download the Output Gap
 imf_from_quandl('United States', 'NGAP_NPGDP')
-imf_from_quandl('USA', 'NGAP_NPGDP') # identical to the code above
+# The example above is identical to
+# imf_from_quandl('USA', 'NGAP_NPGDP')
 }

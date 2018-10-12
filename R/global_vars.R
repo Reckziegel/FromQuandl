@@ -1,0 +1,21 @@
+globalVariables(c(
+  "dots_expr",
+  ".",
+  "possible_quandl",
+  "quandl_code",
+  "download",
+  "verify_download",
+  "imf_code",
+  "iso",
+  "country",
+  "indicator",
+  "value",
+  "CODE",
+  "data",
+  "INDICATOR",
+  "user_filter",
+  "imf_name",
+  "Date",
+  "Value"
+  )
+)

@@ -30,10 +30,8 @@ wb_search <- function(query, print_all = TRUE) {
     stop('Must provide a query.')
   }
 
-
   query <- stringr::str_to_lower(query) %>%
     stringr::str_trim(., side = 'both')
-
 
   search_wb_tbl <- tibble::tibble(
     indicator = c('governance', 'development', 'public', 'poverty'),
@@ -42,8 +40,8 @@ wb_search <- function(query, print_all = TRUE) {
       'https://s3.amazonaws.com/quandl-production-static/World+Bank+Descriptions/wwdi_indicators',
       'https://s3.amazonaws.com/quandl-production-static/World+Bank+Descriptions/wpsd_indicators',
       'https://s3.amazonaws.com/quandl-production-static/World+Bank+Descriptions/wpov_indicators'
-      )
-    ) %>%
+    )
+  ) %>%
     dplyr::mutate(download = purrr::map(
       .x            = source,
       .f            = readr::read_delim,
@@ -62,18 +60,21 @@ wb_search <- function(query, print_all = TRUE) {
     dplyr::mutate(
       INDICATOR   = stringr::str_to_lower(INDICATOR),
       user_filter = stringr::str_detect(string = INDICATOR, pattern = query)
-      ) %>%
+    ) %>%
     dplyr::filter(user_filter == TRUE) %>%
     dplyr::select(INDICATOR, CODE) %>%
     dplyr::rename(indicator = 'INDICATOR', code = 'CODE')
 
 
   if (print_all) {
+
     print(search_wb_tbl, n = Inf)
+
   } else {
+
     search_wb_tbl
+
   }
 
 }
-
 

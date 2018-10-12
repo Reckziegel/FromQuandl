@@ -1,8 +1,52 @@
-library(readxl)
+imf_datasets <- tibble::tribble(
 
-imf_datasets <- readxl::read_excel(
-  "R/imf_datasets.xlsx",
-  col_names = c('.names', '.indicators')
+  ~ imf_name,	                                                            ~ imf_code,
+  "Country GDP based on PPP Valuation, USD Billions", 	                  "PPPGDP",
+  "Current Account Balance, % of GDP",	                                  "BCA_NGDPD",
+  "Current Account Balance, USD Billions",	                              "BCA",
+  "Employment, Millions",                                                	"LE",
+  "Exports of Goods and services, % change",	                            "TX_RPCH",
+  "Exports of Goods, % change",	                                          "TXG_RPCH",
+  "GDP Corresponding to Fiscal Year, Current Prices, LCU Billions",     	"NGDP_FY",
+  "GDP Deflator",                                                        	"NGDP_D",
+  "GDP at Constant Prices, % change",                                     "NGDP_RPCH",
+  "GDP at Constant Prices, LCU Billions",	                                "NGDP_R",
+  "GDP at Current Prices, LCU Billions",	                                "NGDP",
+  "GDP at Current Prices, USD Billions",	                                "NGDPD",
+  "GDP per Capita at Constant Prices, LCU",	                              "NGDPRPC",
+  "GDP per Capita at Current Prices, LCU",	                              "NGDPPC",
+  "GDP per Capita at Current Prices, USD",	                              "NGDPDPC",
+  "General Government Gross Debt, % of GDP",	                            "GGXWDG_NGDP",
+  "General Government Gross Debt, USD Billions",	                        "GGXWDG",
+  "General Government Net Debt, % of GDP",	                              "GGXWDN_NGDP",
+  "General Government Net Debt, USD Billions",	                          "GGXWDN",
+  "General Government Net Lending/Borrowing, % of GDP",	                  "GGXCNL_NGDP",
+  "General Government Net Lending/Borrowing, USD Billions",	              "GGXCNL",
+  "General Government Primary Net Lending/Borrowing, % of GDP Billions",	"GGXONLB_NGDP",
+  "General Government Primary Net Lending/Borrowing, USD Billions",   	  "GGXONLB",
+  "General Government Revenue, % of GDP",	                                "GGR_NGDP",
+  "General Government Revenue, USD Billions",	                            "GGR",
+  "General Government Structural Balance, % of GDP",	                    "GGSB_NPGDP",
+  "General Government Structural Balance, USD Billions",                  "GGSB",
+  "General Government Total Expenditure, % of GDP",                       "GGX_NGDP",
+  "General Government Total Expenditure, USD Billions",                   "GGX",
+  "Gross National Savings, % of GDP",                                     "NGSD_NGDP",
+  "Implied PPP Conversion Rate, LCU per USD",                             "PPPEX",
+  "Imports of Goods and services, % change",	                            "TM_RPCH",
+  "Imports of Goods, % change",                                           "TMG_RPCH",
+  "Inflation % change, Average Consumer Prices",                          "PCPIPCH",
+  "Inflation % change, End of Period Consumer Prices",	                  "PCPIEPCH",
+  "Inflation Index, Average Consumer Prices",                             "PCPI",
+  "Inflation Index, End of Period Consumer Prices",                       "PCPIE",
+  "Output Gap, % of potential GDP",                                       "NGAP_NPGDP",
+  "Per Capita GDP based on PPP Valuation, USD",                           "PPPPC",
+  "Population, Millions",                                                 "LP",
+  "Share of World GDP based on PPP, %",                                   "PPPSH",
+  "Total Investment, % of GDP",                                           "NID_NGDP",
+  "Unemployment Rate, % of Total Labor Force", 	                          "LUR"
+
+
 )
 
-save(imf_datasets, file = 'data/imf_datasets.rdata')
+
+devtools::use_data(imf_datasets, internal = TRUE, overwrite = TRUE)

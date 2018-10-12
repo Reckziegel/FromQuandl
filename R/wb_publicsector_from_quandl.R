@@ -1,8 +1,8 @@
-#' Download IMF data using Quandl API
+#' Download World Bank Public Sector Data From Quandl
 #'
-#' A wrapper around `Quandl`. Downloads macroeconomic data for several indicators and countries covered by IMF in just one line of code.
+#' A wrapper around \code{Quandl}. Download Public Sector data covered by the World Bank with just one line of code.
 #'
-#' The `countries` argument can be passed as an ISO code or as a country name. The only requirement is that the call must be consistent (must contain only ISO codes or country names, but not both).
+#' The \code{countries} argument can be passed as an ISO code or as a country name. The only requirement is that the call must be consistent (must contain only ISO codes or only country names, but not both).
 #'
 #' Sometimes the user may be interested in downloading data for certain regions, like Europe, Latin America, Middle East, etc. For that reason, the countries argument also accepts the following calls:
 #'
@@ -22,9 +22,9 @@
 #'   \item 'ssa'    - Sub Saharan Africa
 #'}
 #'
-#' For any of those calls the `imf_from_quandl()` will download data for all the countries in the requested region. A complete region list can be seen at: \url{https://www.imf.org/external/pubs/ft/weo/2018/01/weodata/groups.htm}.
+#' For any of those calls the \code{wb_publicsector_from_quandl()} will download data for all the countries in the requested region. A complete region list can be seen at: \url{https://www.imf.org/external/pubs/ft/weo/2018/01/weodata/groups.htm}.
 #'
-#' The `...` argument can be used to calibrate the query parameters. It accepts the following calls:
+#' The \code{...} argument can be used to calibrate the query parameters. It accepts the following calls:
 #'\itemize{
 #'  \item \code{start_date}: \code{'YYYY-MM-DD'}
 #'  \item \code{end_date}: \code{'YYYY-MM-DD'}
@@ -36,22 +36,23 @@
 #'
 #' @param countries A vector or a list of character strings.
 #' @param indicators A vector or a list of character strings.
-#' @param ... Additional arguments to be passed into `Quandl` function.
+#' @param ...  Additional parameters to be passed to the Quandl API.
 #'
-#' @return A tidy `tibble`.
+#' @return A tidy \code{tibble}.
+#'
+#' @importFrom magrittr %>%
 #'
 #' @export
 #'
 #' @examples
-#' # Download the Unemployment rate for all countries in Latin America
-#' imf_from_quandl(countries = 'latam', indicators = 'LUR')
-#' # Download the Savings and the Current Account for all countries in the G7
-#' imf_from_quandl(countries = 'g7', indicators = c('NGSD_NGDP', 'BCA_NGDPD'))
-#' # Download the Output Gap
-#' imf_from_quandl('United States', 'NGAP_NPGDP')
-#' # The example above is identical to
-#' # imf_from_quandl('USA', 'NGAP_NPGDP')
-imf_from_quandl <- function(countries, indicators, ...) {
+#' library(FromQuandl)
+#'
+#' # Downlaod Argentina Public Sector Debt at Market Value
+#' wb_publicsector_from_quandl(countries = 'ARG', indicators = 'DP_DOD_DLDS_CR_MV_PS_CD')
+#'
+#' # Download the G7 standardize value for Debt Securities with maturity < 1 year.
+#' wb_publicsector_from_quandl('g7', 'DP_DOD_DLDS_CR_L1_GG_CD', transform = 'normalize')
+wb_publicsector_from_quandl <- function(countries, indicators, ...) {
 
   # checking errors
   if (purrr::is_null(indicators)) {
@@ -60,14 +61,12 @@ imf_from_quandl <- function(countries, indicators, ...) {
     stop('Must provide a country or a group of countries.')
   }
 
-
   # tidy eval
-  dots_expr <- dplyr::quos(order = 'asc', ...)
+  dots_expr  <- dplyr::quos(order = 'asc', ...)
 
-  # to avoid simple msitakes
+  # avoid errors
   indicators <- stringr::str_to_upper(indicators) %>%
     stringr::str_trim(., side = 'both')
-
 
   # read the country files
   country_codes <- list(result = NULL, error = NULL)
@@ -77,10 +76,9 @@ imf_from_quandl <- function(countries, indicators, ...) {
   while (purrr::is_null(country_codes[['result']])) {
 
     country_codes <- suppressMessages(safe_read(
-      file          = "https://s3.amazonaws.com/quandl-production-static/API+Descriptions/WHO/ccodes.txt",
+      file          = "https://s3.amazonaws.com/quandl-production-static/World+Bank+Descriptions/country_codes",
       delim         = "|",
       escape_double = FALSE,
-      col_names     = c('iso', 'country'),
       trim_ws       = TRUE
     )
     )
@@ -103,10 +101,43 @@ imf_from_quandl <- function(countries, indicators, ...) {
 
   }
 
-  country_codes <- country_codes[['result']]
+  country_codes <- country_codes[['result']] %>%
+    dplyr::rename(country = 'COUNTRY', iso = 'CODE')
 
 
-  # Must the data be filtered by country? If yes, do this:
+  # start the downlaod
+  wbi_indicators <- list(result = NULL, error = NULL)
+  n_tries        <- 0
+
+  while (purrr::is_null(wbi_indicators[['result']])) {
+
+    wbi_indicators <- suppressMessages(safe_read(
+      file          = 'https://s3.amazonaws.com/quandl-production-static/World+Bank+Descriptions/wpsd_indicators',
+      delim         = "|",
+      escape_double = FALSE,
+      trim_ws       = TRUE
+    )
+    )
+
+    n_tries <- n_tries + 1
+
+    if (n_tries > 1) {
+
+      Sys.sleep(1)
+
+      if (n_tries > 10) {
+
+        warning('Download failed after 10 attemps. Check the intenet connection.')
+
+        break
+
+      }
+
+    }
+
+  }
+
+  # select specific countries?
   regions <- c('ae', 'oae', 'euro', 'eu', 'ede', 'g7', 'cis', 'dea', 'asean_5', 'edeuro', 'latam', 'me', 'ssa')
 
   # if an ISO code is supplied
@@ -116,13 +147,13 @@ imf_from_quandl <- function(countries, indicators, ...) {
       stringr::str_trim(., side = 'both')
 
     country_codes <- country_codes %>%
-      dplyr::filter(.[["iso"]] %in% as.vector(countries))
+      dplyr::filter(iso %in%  as.vector(countries))
 
     # if a region is supplied
   } else if (any(countries %in% regions)) {
 
     country_codes <- country_codes %>%
-      dplyr::filter(.[["country"]] %in% country_groups(countries))
+      dplyr::filter(country %in% country_groups(countries))
 
     # if a country name is supplied
   } else if (any(stringr::str_to_title(countries) %in% country_codes[["country"]])) {
@@ -131,7 +162,7 @@ imf_from_quandl <- function(countries, indicators, ...) {
       stringr::str_trim(., side = 'both')
 
     country_codes <- country_codes %>%
-      dplyr::filter(.[["country"]] %in% as.vector(countries))
+      dplyr::filter(country %in% as.vector(countries))
 
     # if all countries are selected
   } else if (countries == 'all') {
@@ -145,27 +176,25 @@ imf_from_quandl <- function(countries, indicators, ...) {
 
   }
 
-  database <- imf_datasets %>%
-    dplyr::filter(imf_code %in% indicators) %>%
-    tidyr::crossing(country_codes) %>%
-    dplyr::mutate(quandl_code = stringr::str_c('ODA/', iso, '_', imf_code))
 
+  database <- wbi_indicators[['result']] %>%
+    dplyr::filter(CODE %in% indicators) %>%
+    tidyr::crossing(country_codes) %>%
+    dplyr::mutate(quandl_code = stringr::str_c('WPSD/', iso, '_', CODE))
 
   # error handler
   possible_quandl <- purrr::possibly(Quandl::Quandl, NA)
 
-  # data wrangling
+  # final manipulation
   database %>%
     tidyr::nest(quandl_code) %>%
 
-    # map the selected code thought the diserided countries
+    # 5.1. map the selected code thought the selected countries
     dplyr::mutate(
       download = purrr::map(
         .x = data,
         .f = ~ possible_quandl(.$quandl_code, !!! dots_expr)
       ),
-
-      # exclude the countries in which the indicator is not avaiable
       verify_download = purrr::map(
         .x = download,
         .f = ~ !is.logical(.)
@@ -173,14 +202,10 @@ imf_from_quandl <- function(countries, indicators, ...) {
     ) %>%
     dplyr::filter(verify_download == TRUE) %>%
 
-    # unnest and tidy
-    tidyr::unnest(data) %>%
-    tidyr::unnest(download) %>%
-    dplyr::select(imf_name, country, Date, Value) %>%
-    dplyr::rename(date = 'Date', value = 'Value', indicator = 'imf_name') %>%
+    tidyr::unnest(.$download) %>%
+    dplyr::rename(date = 'Date', value = 'Value') %>%
     dplyr::mutate_if(purrr::is_character, forcats::as_factor) %>%
+    dplyr::rename(indicator = 'INDICATOR') %>%
     dplyr::select(date, country, indicator, value)
 
 }
-
-
