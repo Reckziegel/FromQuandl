@@ -11,7 +11,7 @@ Description: FromQuandl package is designed to minimize the efforts
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Depends:
     R (>= 3.5.0)
 Imports:
@@ -26,4 +26,5 @@ Imports:
     tibble, 
     tidyr
 Suggests:
-    ggplot2
+    ggplot2,
+    testthat

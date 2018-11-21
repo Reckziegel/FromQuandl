@@ -8,6 +8,9 @@
 #' @param print_all Logical vector. TRUE if you want to overwrite the tibble printing format.
 #'
 #' @return A \code{tibble} with the indicators' name and the respective \code{Quandl} code.
+#'
+#' @importFrom rlang .data
+#'
 #' @export
 #'
 #' @examples
@@ -28,14 +31,14 @@ imf_search <- function(query, print_all = TRUE) {
     stringr::str_trim(., side = 'both')
 
   search_imf_tbl <- imf_datasets %>%
-    dplyr::mutate(imf_name = stringr::str_to_lower(.[["imf_name"]]))
+    dplyr::mutate(imf_name = stringr::str_to_lower(.data[["imf_name"]]))
 
   # filter search
   if (length(query) == 1) {
 
     search_imf_tbl <- search_imf_tbl %>%
       dplyr::filter(stringr::str_detect(
-        string  = .[["imf_name"]],
+        string  = .data[["imf_name"]],
         pattern = query
         )
       )
@@ -47,18 +50,28 @@ imf_search <- function(query, print_all = TRUE) {
 
     search_imf_tbl <- search_imf_tbl %>%
       dplyr::filter(stringr::str_detect(
-        string  = .[["imf_name"]],
+        string  = .data[["imf_name"]],
         pattern = query
         )
       )
 
   }
 
+  if (nrow(search_imf_tbl) == 0) {
+
+    warning("I was not possible to identify the pattern ", query, " in the IMF database.")
+
+  }
+
   # output
   if (print_all) {
+
     print(search_imf_tbl, n = Inf)
+
   } else {
+
     print(search_imf_tbl, n = 10)
+
   }
 
 }

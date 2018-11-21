@@ -95,4 +95,6 @@ imf_country_groups <- list(
 
 )
 
+# use_data
+devtools::use_data(wb_indicators, country_codes, imf_country_groups, imf_datasets, internal = TRUE, overwrite = TRUE)
 

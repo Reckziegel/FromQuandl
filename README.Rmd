@@ -62,18 +62,18 @@ The result is a `tibble` that it's ready to be used in `ggplot2`.
 
 There is no need to restrict the download to only one indicator. The `indicators` argument supports lists and vectors of strings as well, but be aware that may be safe using `Quandl.api_key()` if you want to access too many series.   
 
-As a second example imagine that you want to downalod the poverty statistics from the World Bank for all countries in the Commonwealth of Independent States. Simply run
+As a second example imagine that you want to downalod the rate of change in poverty statistics from the World Bank for all countries in the Commonwealth of Independent States. Simply run
 
 ```{r example 2}
 library(FromQuandl)
 
-wb_from_quandl('cis', 'poverty') 
+wb_from_quandl('cis', 'poverty', transform = 'rdiff') 
 
 ```
 
-The data is *tidy* and ready to be used with the `%>%` operatior.   
+The data is tidy and ready to be used with the `%>%` operatior.   
 
-Additional information about the `imf_from_quandl()`and `wb_from_quandl()` can be found at the package documenation.
+Additional information about the `imf_from_quandl()`and `wb_*_from_quandl()` can be found at the package documenation.
 
 ## Future Developments
 

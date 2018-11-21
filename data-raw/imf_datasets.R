@@ -49,4 +49,4 @@ imf_datasets <- tibble::tribble(
 )
 
 
-devtools::use_data(imf_datasets, internal = TRUE, overwrite = TRUE)
+devtools::use_data(wb_indicators, country_codes, imf_country_groups, imf_datasets, internal = TRUE, overwrite = TRUE)

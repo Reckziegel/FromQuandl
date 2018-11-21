@@ -8,7 +8,7 @@
 #'
 #' \itemize{
 #'   \item 'ae'     - Advanced Economics
-#'   \item 'asean_5'- Asean Top 5
+#'   \item 'asean5' - Asean Top 5
 #'   \item 'cis'    - Commonwealth and Independent States
 #'   \item 'eda'    - Emerging and Developing Asia
 #'   \item 'ede'    - Emerging and Developing Economies
@@ -22,7 +22,7 @@
 #'   \item 'ssa'    - Sub Saharan Africa
 #'}
 #'
-#' For any of those calls the `imf_from_quandl()` will download data for all the countries in the requested region. A complete region list can be seen at: \url{https://www.imf.org/external/pubs/ft/weo/2018/01/weodata/groups.htm}.
+#' For any of those calls the `fq_imf()` will download data for all the countries in the requested region. A complete region list can be seen at: \url{https://www.imf.org/external/pubs/ft/weo/2018/01/weodata/groups.htm}.
 #'
 #' The `...` argument can be used to calibrate the query parameters. It accepts the following calls:
 #'\itemize{
@@ -46,14 +46,14 @@
 #'
 #' @examples
 #' # Download the Unemployment rate for all countries in Latin America
-#' imf_from_quandl(countries = 'latam', indicators = 'LUR')
+#' fq_imf(countries = 'latam', indicators = 'LUR')
 #' # Download the Savings and the Current Account for all countries in the G7
-#' imf_from_quandl(countries = 'g7', indicators = c('NGSD_NGDP', 'BCA_NGDPD'))
+#' fq_imf(countries = 'g7', indicators = c('NGSD_NGDP', 'BCA_NGDPD'))
 #' # Download the Output Gap
-#' imf_from_quandl('United States', 'NGAP_NPGDP')
+#' fq_imf('United States', 'NGAP_NPGDP')
 #' # The example above is identical to
-#' # imf_from_quandl('USA', 'NGAP_NPGDP')
-imf_from_quandl <- function(countries, indicators, ...) {
+#' # fq_imf('USA', 'NGAP_NPGDP')
+fq_imf <- function(countries, indicators, ...) {
 
   # checking errors
   if (purrr::is_null(indicators)) {
@@ -69,7 +69,7 @@ imf_from_quandl <- function(countries, indicators, ...) {
   # check if order = 'asc'
   if ((!purrr::is_null(dots_expr[['order']])) && dots_expr[['order']][[2]] != "asc") {
 
-    warning("To keep consistency with other tidy functions it will be set order = 'asc'.", immediate. = TRUE)
+    warning("To keep consistency with other tidy functions it will be set order = 'asc'.")
 
     dots_expr[["order"]] <- NULL
 
@@ -89,14 +89,14 @@ imf_from_quandl <- function(countries, indicators, ...) {
     escape_double = FALSE,
     col_names     = c('iso', 'country'),
     trim_ws       = TRUE
-    )
+  )
   )
 
   country_codes <- country_codes[['result']]
 
 
   # Must the data be filtered by country? If yes, do this:
-  regions <- c('ae', 'oae', 'euro', 'eu', 'ede', 'g7', 'cis', 'dea', 'asean_5', 'edeuro', 'latam', 'me', 'ssa')
+  regions <- c('ae', 'oae', 'euro', 'eu', 'ede', 'g7', 'cis', 'dea', 'asean5', 'edeuro', 'latam', 'me', 'ssa')
 
   # if an ISO code is supplied
   if (max(stringr::str_count(countries)) <= 3 && !(stringr::str_to_lower(countries) %in% regions)) {
@@ -171,5 +171,3 @@ imf_from_quandl <- function(countries, indicators, ...) {
     dplyr::select(.data$date, .data$country, .data$indicator, .data$value)
 
 }
-
-

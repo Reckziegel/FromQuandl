@@ -16,6 +16,9 @@
 #'
 #' @return A \code{tibble} with the indicators' name and the respective \code{Quandl} code.
 #'
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
+#'
 #' @export
 #'
 #' @examples
@@ -55,14 +58,14 @@ wb_search <- function(query, print_all = TRUE) {
     )
 
   search_wb_tbl <- search_wb_tbl %>%
-    tidyr::unnest(download) %>%
-    dplyr::select(INDICATOR, CODE) %>%
+    tidyr::unnest(.data$download) %>%
+    dplyr::select(.data$INDICATOR, .data$CODE) %>%
     dplyr::mutate(
-      INDICATOR   = stringr::str_to_lower(INDICATOR),
-      user_filter = stringr::str_detect(string = INDICATOR, pattern = query)
+      INDICATOR   = stringr::str_to_lower(.data$INDICATOR),
+      user_filter = stringr::str_detect(string = .data$INDICATOR, pattern = query)
     ) %>%
-    dplyr::filter(user_filter == TRUE) %>%
-    dplyr::select(INDICATOR, CODE) %>%
+    dplyr::filter(.data$user_filter == TRUE) %>%
+    dplyr::select(.data$INDICATOR, .data$CODE) %>%
     dplyr::rename(indicator = 'INDICATOR', code = 'CODE')
 
 
