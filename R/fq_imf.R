@@ -1,8 +1,8 @@
 #' Download IMF data using Quandl API
 #'
-#' A wrapper around `Quandl`. Downloads macroeconomic data for several indicators and countries covered by IMF in just one line of code.
+#' A wrapper around \code{Quandl}. Downloads macroeconomic data for several indicators and countries covered by the IMF.
 #'
-#' The `countries` argument can be passed as an ISO code or as a country name. The only requirement is that the call must be consistent (must contain only ISO codes or country names, but not both).
+#' The \code{countries} argument can be passed as an ISO code or as a country name. The only requirement is that the call must be consistent (must contain only ISO codes or country names, but not both).
 #'
 #' Sometimes the user may be interested in downloading data for certain regions, like Europe, Latin America, Middle East, etc. For that reason, the countries argument also accepts the following calls:
 #'
@@ -22,9 +22,9 @@
 #'   \item 'ssa'    - Sub Saharan Africa
 #'}
 #'
-#' For any of those calls the `fq_imf()` will download data for all the countries in the requested region. A complete region list can be seen at: \url{https://www.imf.org/external/pubs/ft/weo/2018/01/weodata/groups.htm}.
+#' For any of those calls the \code{fq_imf()} will download data for all the countries in the requested region. A complete region list can be seen at: \url{https://www.imf.org/external/pubs/ft/weo/2018/01/weodata/groups.htm}.
 #'
-#' The `...` argument can be used to calibrate the query parameters. It accepts the following calls:
+#' The \code{...} argument can be used to calibrate the query parameters. It accepts the following calls:
 #'\itemize{
 #'  \item \code{start_date}: \code{'YYYY-MM-DD'}
 #'  \item \code{end_date}: \code{'YYYY-MM-DD'}
@@ -36,24 +36,26 @@
 #'
 #' @param countries A vector or a list of character strings.
 #' @param indicators A vector or a list of character strings.
-#' @param ... Additional arguments to be passed into `Quandl` function.
+#' @param verbose Should warning messages be printed? Default is \code{TRUE}.
+#' @param ... Additional arguments to be passed into \code{Quandl} function.
 #'
-#' @return A tidy `tibble`.
+#' @return A tidy \code{tibble} with four columns: \code{date}, \code{country}, \code{indicator} and \code{value}.
 #'
+#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #'
 #' @export
 #'
 #' @examples
-#' # Download the Unemployment rate for all countries in Latin America
-#' fq_imf(countries = 'latam', indicators = 'LUR')
 #' # Download the Savings and the Current Account for all countries in the G7
 #' fq_imf(countries = 'g7', indicators = c('NGSD_NGDP', 'BCA_NGDPD'))
-#' # Download the Output Gap
+#'
+#' # Download the US Output Gap
 #' fq_imf('United States', 'NGAP_NPGDP')
+#'
 #' # The example above is identical to
 #' # fq_imf('USA', 'NGAP_NPGDP')
-fq_imf <- function(countries, indicators, ...) {
+fq_imf <- function(countries, indicators, verbose = TRUE, ...) {
 
   # checking errors
   if (purrr::is_null(indicators)) {
@@ -67,9 +69,9 @@ fq_imf <- function(countries, indicators, ...) {
   dots_expr <- dplyr::quos(...)
 
   # check if order = 'asc'
-  if ((!purrr::is_null(dots_expr[['order']])) && dots_expr[['order']][[2]] != "asc") {
+  if ((!purrr::is_null(dots_expr[['order']])) && dots_expr[['order']][[2]] != "asc" && verbose) {
 
-    warning("To keep consistency with other tidy functions it will be set order = 'asc'.")
+    warning("To keep consistency with other tidy functions it will be set ", crayon::green("order = 'asc'."))
 
     dots_expr[["order"]] <- NULL
 
@@ -144,7 +146,7 @@ fq_imf <- function(countries, indicators, ...) {
   possible_quandl <- purrr::possibly(Quandl::Quandl, NA)
 
   # data wrangling
-  database %>%
+  database <- database %>%
     tidyr::nest(.data$quandl_code) %>%
 
     # map the selected code thought the diserided countries
@@ -159,15 +161,68 @@ fq_imf <- function(countries, indicators, ...) {
         .x = .data$download,
         .f = ~ !is.logical(.x)
       )
-    ) %>%
-    dplyr::filter(.data$verify_download == TRUE) %>%
+    )
 
-    # unnest and tidy
-    tidyr::unnest(.data$data) %>%
-    tidyr::unnest(.data$download) %>%
-    dplyr::select(.data$imf_name, .data$country, .data$Date, .data$Value) %>%
-    dplyr::rename(date = 'Date', value = 'Value', indicator = 'imf_name') %>%
-    dplyr::mutate_if(purrr::is_character, forcats::as_factor) %>%
-    dplyr::select(.data$date, .data$country, .data$indicator, .data$value)
+  # send a message informing if the downloads worked as expected
+  if (any(dplyr::select(database, .data$verify_download) == FALSE)) {
+
+    if (all(dplyr::select(database, .data$verify_download) == FALSE)) {
+
+      stop('All downloads have failed.')
+
+    } else {
+
+      if (verbose) {
+
+        warn_tbl <- database %>%
+          dplyr::filter(.data$verify_download == FALSE)
+
+        for (i in 1:nrow(warn_tbl)) {
+
+          warning(
+            stringr::str_c(
+              "Indicator ", crayon::cyan(warn_tbl$imf_name[[i]]),
+              " for the country ", crayon::yellow(warn_tbl$country[[i]]),
+              " has failed. \n"
+              ),
+            immediate. = TRUE
+            )
+
+        }
+
+      }
+
+    }
+
+  } else {
+
+      message('All downloads have succeeded.')
+
+  }
+
+  # final manipulation
+  database <- database %>%
+    dplyr::filter(.data$verify_download == TRUE)
+
+  if (nrow(database) == 0) {
+
+    if (!purrr::is_empty(dots_expr)) {
+
+      stop("It was not possible to complete the download. \n",
+           "Please check if the arguments passed to ... are valid ones. Maybe there is a typo.")
+
+    }
+
+    stop("It was not possible to complete the download. Please try it again!")
+
+  } else {
+
+    database %>%
+      tidyr::unnest(.data$download) %>%
+      dplyr::mutate_if(purrr::is_character, forcats::as_factor) %>%
+      dplyr::select(.data$Date, .data$country, .data$imf_name, .data$Value) %>%
+      dplyr::rename(date = "Date", indicator = "imf_name", value = "Value")
+
+  }
 
 }

@@ -4,23 +4,25 @@
 \alias{fq_imf}
 \title{Download IMF data using Quandl API}
 \usage{
-fq_imf(countries, indicators, ...)
+fq_imf(countries, indicators, verbose = TRUE, ...)
 }
 \arguments{
 \item{countries}{A vector or a list of character strings.}
 
 \item{indicators}{A vector or a list of character strings.}
 
-\item{...}{Additional arguments to be passed into `Quandl` function.}
+\item{verbose}{Should warning messages be printed? Default is \code{TRUE}.}
+
+\item{...}{Additional arguments to be passed into \code{Quandl} function.}
 }
 \value{
-A tidy `tibble`.
+A tidy \code{tibble} with four columns: \code{date}, \code{country}, \code{indicator} and \code{value}.
 }
 \description{
-A wrapper around `Quandl`. Downloads macroeconomic data for several indicators and countries covered by IMF in just one line of code.
+A wrapper around \code{Quandl}. Downloads macroeconomic data for several indicators and countries covered by the IMF.
 }
 \details{
-The `countries` argument can be passed as an ISO code or as a country name. The only requirement is that the call must be consistent (must contain only ISO codes or country names, but not both).
+The \code{countries} argument can be passed as an ISO code or as a country name. The only requirement is that the call must be consistent (must contain only ISO codes or country names, but not both).
 
 Sometimes the user may be interested in downloading data for certain regions, like Europe, Latin America, Middle East, etc. For that reason, the countries argument also accepts the following calls:
 
@@ -40,9 +42,9 @@ Sometimes the user may be interested in downloading data for certain regions, li
   \item 'ssa'    - Sub Saharan Africa
 }
 
-For any of those calls the `fq_imf()` will download data for all the countries in the requested region. A complete region list can be seen at: \url{https://www.imf.org/external/pubs/ft/weo/2018/01/weodata/groups.htm}.
+For any of those calls the \code{fq_imf()} will download data for all the countries in the requested region. A complete region list can be seen at: \url{https://www.imf.org/external/pubs/ft/weo/2018/01/weodata/groups.htm}.
 
-The `...` argument can be used to calibrate the query parameters. It accepts the following calls:
+The \code{...} argument can be used to calibrate the query parameters. It accepts the following calls:
 \itemize{
  \item \code{start_date}: \code{'YYYY-MM-DD'}
  \item \code{end_date}: \code{'YYYY-MM-DD'}
@@ -53,12 +55,12 @@ The `...` argument can be used to calibrate the query parameters. It accepts the
 The full list can be seen at: \url{https://docs.quandl.com/docs/r}.
 }
 \examples{
-# Download the Unemployment rate for all countries in Latin America
-fq_imf(countries = 'latam', indicators = 'LUR')
 # Download the Savings and the Current Account for all countries in the G7
 fq_imf(countries = 'g7', indicators = c('NGSD_NGDP', 'BCA_NGDPD'))
-# Download the Output Gap
+
+# Download the US Output Gap
 fq_imf('United States', 'NGAP_NPGDP')
+
 # The example above is identical to
 # fq_imf('USA', 'NGAP_NPGDP')
 }

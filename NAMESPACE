@@ -2,7 +2,6 @@
 
 export(fq_imf)
 export(fq_wb)
-export(imf_from_quandl)
 export(imf_search)
 export(wb_search)
 importFrom(magrittr,"%>%")

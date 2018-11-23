@@ -4,17 +4,19 @@
 \alias{fq_wb}
 \title{Download World Bank Data Using Quandl API}
 \usage{
-fq_wb(countries, indicators, ...)
+fq_wb(countries, indicators, verbose = TRUE, ...)
 }
 \arguments{
 \item{countries}{A vector or a list of character strings.}
 
 \item{indicators}{A vector or a list of character strings.}
 
+\item{verbose}{Should warning messages be printed? Default is \code{TRUE}.}
+
 \item{...}{Additional arguments to be passed into \code{Quandl} function.}
 }
 \value{
-A tidy `tibble` with four columns: \code{date}, \code{country}, \code{indicator} and \code{value}.
+A tidy \code{tibble} with four columns: \code{date}, \code{country}, \code{indicator} and \code{value}.
 }
 \description{
 A wrapper around \code{Quandl}. Downloads macroeconomic data for several indicators and countries covered by World Bank.
@@ -53,7 +55,7 @@ The \code{...} argument can be used to calibrate the query parameters. It accept
 
 The full list can be seen at: \url{https://docs.quandl.com/docs/r}.
 
-\code{Quandl} has a diverse of World Bank datasets. The following items give a brief description of what you could expect to find when searching
+\code{Quandl} has a diverse of World Bank datasets. The following items give a brief description of what you could expect to find when trying to dig further into each one of them:
 
 \itemize{
   \item \href{https://www.quandl.com/data/WWDI-World-Bank-World-Development-Indicators}{World Development Indicators}: Most current and accurate development indicators, compiled from officially-recognized international sources.
@@ -82,78 +84,14 @@ The full list can be seen at: \url{https://docs.quandl.com/docs/r}.
 # load the package
 library(FromQuandl)
 
-#####################################################
-### Data from World Bank World Development Indicators
-#####################################################
-
-# Downlaod the Broad money (\% of GDP) for all countries in the euro area
-fq_wb(countries = 'euro', indicators = 'FM_LBL_BMNY_GD_ZS')
-
-# Download the number of children out of school in the primary for countries
-# in the Sub Saharan Africa from 1900 up to 2000.
-fq_wb('ssa', 'SE_PRM_UNER', start_date = '1990-01-01', end_date = '2000-01-01')
-
-# Download and plot the 1 year return of Real effective exchange rate index
-# for all Advanced Economies.
-if (requireNamespace('ggplot2',quietly = TRUE)) {
- fq_wb('ae', list('PX_REX_REER'), transform = 'rdiff') \%>\%
-   ggplot(aes(x = date, y = value, color = country)) +
-   geom_line(show.legend = FALSE) +
-   facet_wrap(~ country, scales = 'free_y')
-}
-
-
-##############################################
-### World Bank Worldwide Governance Indicators
-##############################################
+# Download the 1 year return of Real effective exchange rate index for all Advanced Economies.
+fq_wb('ae', list('PX_REX_REER'), verbose = FALSE, transform = 'rdiff')
 
 # Downlaod the Control of Corruption Estimate in the US
 fq_wb('USA', 'CC_EST')
 
-# Download the Government Effectiveness Percentile Rank for all countries in the Middle East
-fq_wb('me', 'GE_PER_RNK')
-
 # Download al indicators related to Rule of Law for the G7 countries from 2010 ownwards...
-wb_search('law')
 fq_wb(countries  = 'g7',
       indicators = c('RL_EST', 'RL_NO_SRC', 'RL_PER_RNK', 'RL_STD_ERR'),
       start_date = '2010-01-01')
-
-# Download the Number of Sources of "Voice and Accountability" for all countries
-# in Latin America
-fq_wb('latam', 'VA_NO_SRC')
-
-
-##################################
-###  World Bank Poverty Statistics
-##################################
-
-# Plot and model the poor at $2 a day (PPP) in
-# emerging and Developing Europe Countries
-if (requireNamespace('ggplot2',quietly = TRUE)) {
-    fq_wb(
-      countries  = 'edeuro',
-      indicators ='SI_POV_NOP2',
-      start_date = '2000-01-01',
-      end_date   = '2018-01-01'
-    ) \%>\%
-    ggplot(aes(date, value, color = country)) +
-    geom_point(show.legend = FALSE) +
-    geom_smooth(show.legend = FALSE) +
-    facet_wrap(~ country, scales = 'free_y') +
-    theme_classic()
-}
-
-
-###############################
-# World Bank Public Sector Debt
-###############################
-
-# Downlaod Brazil Public Sector Debt at Market Value
-#fq_wb(countries = 'BRA', indicators = 'DP_DOD_DLDS_CR_MV_PS_CD')
-
-# Download the G7 standardize value for Debt Securities with maturity < 1 year.
-#fq_wb('g7', 'DP_DOD_DLDS_CR_L1_GG_CD', transform = 'normalize')
-
-
 }

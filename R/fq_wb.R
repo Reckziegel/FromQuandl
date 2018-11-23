@@ -35,7 +35,7 @@
 #'
 #' The full list can be seen at: \url{https://docs.quandl.com/docs/r}.
 #'
-#' \code{Quandl} has a diverse of World Bank datasets. The following items give a brief description of what you could expect to find when searching
+#' \code{Quandl} has a diverse of World Bank datasets. The following items give a brief description of what you could expect to find when trying to dig further into each one of them:
 #'
 #' \itemize{
 #'   \item \href{https://www.quandl.com/data/WWDI-World-Bank-World-Development-Indicators}{World Development Indicators}: Most current and accurate development indicators, compiled from officially-recognized international sources.
@@ -63,9 +63,10 @@
 #'
 #' @param countries A vector or a list of character strings.
 #' @param indicators A vector or a list of character strings.
+#' @param verbose Should warning messages be printed? Default is \code{TRUE}.
 #' @param ... Additional arguments to be passed into \code{Quandl} function.
 #'
-#' @return A tidy `tibble` with four columns: \code{date}, \code{country}, \code{indicator} and \code{value}.
+#' @return A tidy \code{tibble} with four columns: \code{date}, \code{country}, \code{indicator} and \code{value}.
 #'
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
@@ -76,81 +77,17 @@
 #' # load the package
 #' library(FromQuandl)
 #'
-#' #####################################################
-#' ### Data from World Bank World Development Indicators
-#' #####################################################
-#'
-#' # Downlaod the Broad money (% of GDP) for all countries in the euro area
-#' fq_wb(countries = 'euro', indicators = 'FM_LBL_BMNY_GD_ZS')
-#'
-#' # Download the number of children out of school in the primary for countries
-#' # in the Sub Saharan Africa from 1900 up to 2000.
-#' fq_wb('ssa', 'SE_PRM_UNER', start_date = '1990-01-01', end_date = '2000-01-01')
-#'
-#' # Download and plot the 1 year return of Real effective exchange rate index
-#' # for all Advanced Economies.
-#' if (requireNamespace('ggplot2',quietly = TRUE)) {
-#'  fq_wb('ae', list('PX_REX_REER'), transform = 'rdiff') %>%
-#'    ggplot(aes(x = date, y = value, color = country)) +
-#'    geom_line(show.legend = FALSE) +
-#'    facet_wrap(~ country, scales = 'free_y')
-#' }
-#'
-#'
-#' ##############################################
-#' ### World Bank Worldwide Governance Indicators
-#' ##############################################
+#' # Download the 1 year return of Real effective exchange rate index for all Advanced Economies.
+#' fq_wb('ae', list('PX_REX_REER'), verbose = FALSE, transform = 'rdiff')
 #'
 #' # Downlaod the Control of Corruption Estimate in the US
 #' fq_wb('USA', 'CC_EST')
 #'
-#' # Download the Government Effectiveness Percentile Rank for all countries in the Middle East
-#' fq_wb('me', 'GE_PER_RNK')
-#'
 #' # Download al indicators related to Rule of Law for the G7 countries from 2010 ownwards...
-#' wb_search('law')
 #' fq_wb(countries  = 'g7',
 #'       indicators = c('RL_EST', 'RL_NO_SRC', 'RL_PER_RNK', 'RL_STD_ERR'),
 #'       start_date = '2010-01-01')
-#'
-#' # Download the Number of Sources of "Voice and Accountability" for all countries
-#' # in Latin America
-#' fq_wb('latam', 'VA_NO_SRC')
-#'
-#'
-#' ##################################
-#' ###  World Bank Poverty Statistics
-#' ##################################
-#'
-#' # Plot and model the poor at $2 a day (PPP) in
-#' # emerging and Developing Europe Countries
-#' if (requireNamespace('ggplot2',quietly = TRUE)) {
-#'     fq_wb(
-#'       countries  = 'edeuro',
-#'       indicators ='SI_POV_NOP2',
-#'       start_date = '2000-01-01',
-#'       end_date   = '2018-01-01'
-#'     ) %>%
-#'     ggplot(aes(date, value, color = country)) +
-#'     geom_point(show.legend = FALSE) +
-#'     geom_smooth(show.legend = FALSE) +
-#'     facet_wrap(~ country, scales = 'free_y') +
-#'     theme_classic()
-#'}
-#'
-#'
-#' ###############################
-#' # World Bank Public Sector Debt
-#' ###############################
-#'
-#' # Downlaod Brazil Public Sector Debt at Market Value
-#' #fq_wb(countries = 'BRA', indicators = 'DP_DOD_DLDS_CR_MV_PS_CD')
-#'
-#' # Download the G7 standardize value for Debt Securities with maturity < 1 year.
-#' #fq_wb('g7', 'DP_DOD_DLDS_CR_L1_GG_CD', transform = 'normalize')
-#'
-#'
-fq_wb <- function(countries, indicators, ...) {
+fq_wb <- function(countries, indicators, verbose = TRUE, ...) {
 
   # checking errors
   if (purrr::is_null(indicators)) {
@@ -167,9 +104,9 @@ fq_wb <- function(countries, indicators, ...) {
   dots_expr  <- dplyr::quos(...)
 
   # check if order = 'asc'
-  if ((!purrr::is_null(dots_expr[['order']])) && dots_expr[['order']][[2]] != "asc") {
+  if ((!purrr::is_null(dots_expr[['order']])) && dots_expr[['order']][[2]] != "asc" && verbose) {
 
-    warning("To keep consistency with other tidy functions it will be set order = 'asc'.")
+    warning("To keep consistency with other tidy functions it will be set ", crayon::green("order = 'asc'."))
 
     dots_expr[["order"]] <- NULL
 
@@ -253,14 +190,23 @@ fq_wb <- function(countries, indicators, ...) {
 
     } else {
 
-      for (i in seq(database)) {
+      if (verbose) {
 
-        warning(
-          stringr::str_c(
-            "Indicator ", database$indicator[[i]], " for the country ", database$country[[i]], " has failed. \n"
-            ),
-          immediate. = TRUE
-        )
+        warn_tbl <- database %>%
+          dplyr::filter(.data$verify_download == FALSE)
+
+        for (i in 1:nrow(warn_tbl)) {
+
+          warning(
+            stringr::str_c(
+              "Indicator ", crayon::cyan(warn_tbl$indicator[[i]]),
+              " for the country ", crayon::yellow(warn_tbl$country[[i]]),
+              " has failed. \n"
+              ),
+            immediate. = TRUE
+            )
+
+        }
 
       }
 

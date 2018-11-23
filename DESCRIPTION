@@ -19,12 +19,13 @@ Imports:
     dplyr,
     forcats,
     magrittr,
-    purrr, 
+    purrr,
     readr,
     rlang,
     stringr,
-    tibble, 
-    tidyr
+    tibble,
+    tidyr,
+    crayon
 Suggests:
     ggplot2,
     testthat

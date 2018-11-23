@@ -3,9 +3,8 @@ library(FromQuandl)
 context("fq_imf")
 
 test1 <- fq_imf('United States', 'NGAP_NPGDP')
-test2 <- fq_imf("USA", "NGAP_NPGDP")
-test3 <- fq_imf("USA", "NGAP_NPGDP", order = 'desc')
-test4 <- fq_imf('USA', 'NGAP_NPGDP', start_date = '2010-01-01', end_date = '2012-01-01')
+test2 <- fq_imf("USA", "NGAP_NPGDP", order = 'desc')
+test3 <- fq_imf('USA', 'NGAP_NPGDP', start_date = '2010-01-01', end_date = '2012-01-01')
 
 test_that("It contains the correct data structure", {
 
@@ -51,7 +50,7 @@ test_that("It sends a warning if order = 'desc' is used in ...", {
   #expect_warning(test3, "To keep consistency with ")
 
   # dates are organized in the ascending order
-  expect_true(tail(test3$date, 1) > head(test3$date, 1))
+  expect_true(tail(test2$date, 1) > head(test2$date, 1))
 
 })
 
@@ -60,8 +59,8 @@ test_that("It sends a warning if order = 'desc' is used in ...", {
 test_that("Additional argumets passed through ... works properly", {
 
   # starts at 2010
-  expect_equal(test4$date[[1]], lubridate::date('2010-12-31'))
-  expect_equal(test4$date[[2]], lubridate::date('2011-12-31'))
+  expect_equal(test3$date[[1]], lubridate::date('2010-12-31'))
+  expect_equal(test3$date[[2]], lubridate::date('2011-12-31'))
 
 
 })
