@@ -40,7 +40,7 @@ Suppose you would like to download the Current Account Balance (as % of GDP) for
 
 ```{r example0}
 library(FromQuandl)
-imf_search('account')
+fq_imf_search('account')
 ```
 
 Next use `fq_imf()` to download and plot the data. 
@@ -77,7 +77,7 @@ As a second example imagine that you want to downalod the rate of change in pove
 #library(FromQuandl)
 
 # get poverty codes
-poverty_data <- wb_search('poverty')
+poverty_data <- fq_wb_search('poverty')
 
 # download data
 fq_wb(countries = 'cis', indicators = poverty_data$code, transform = 'rdiff') 
