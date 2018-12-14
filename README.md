@@ -3,6 +3,8 @@
 FromQuandl
 ==========
 
+[![Waffle.io - Columns and their card count](https://badge.waffle.io/Reckziegel/FromQuandl.svg?columns=all)](https://waffle.io/Reckziegel/FromQuandl)
+
 The goal of FromQuandl is to easy the search, download and data preprocessing steps that often happen when using the `Quandl` package in R.
 
 Currently supports functions for IMF and World Bank datasets.
@@ -24,12 +26,12 @@ Suppose you would like to download the Current Account Balance (as % of GDP) for
 
 ``` r
 library(FromQuandl)
-imf_search('account')
+fq_imf_search('account')
 #> # A tibble: 2 x 2
 #>   imf_name                              imf_code 
 #>   <chr>                                 <chr>    
-#> 1 current account balance, % of gdp     BCA_NGDPD
-#> 2 current account balance, usd billions BCA
+#> 1 Current Account Balance, % of GDP     BCA_NGDPD
+#> 2 Current Account Balance, USD Billions BCA
 ```
 
 Next use `fq_imf()` to download and plot the data.
@@ -81,30 +83,11 @@ As a second example imagine that you want to downalod the rate of change in pove
 #library(FromQuandl)
 
 # get poverty codes
-poverty_data <- wb_search('poverty')
-#> # A tibble: 16 x 2
-#>    indicator                                                    code      
-#>    <chr>                                                        <chr>     
-#>  1 poverty gap at $1.25 a day (ppp) (%)                         SI_POV_GA~
-#>  2 poverty gap at $2 a day (ppp) (%)                            SI_POV_GA~
-#>  3 poverty gap at national poverty line (%)                     SI_POV_NA~
-#>  4 poverty gap at rural poverty line (%)                        SI_POV_RU~
-#>  5 poverty gap at urban poverty line (%)                        SI_POV_UR~
-#>  6 poverty headcount ratio at $1.25 a day (ppp) (% of populati~ SI_POV_DD~
-#>  7 poverty headcount ratio at $2 a day (ppp) (% of population)  SI_POV_2D~
-#>  8 poverty headcount ratio at national poverty line (% of popu~ SI_POV_NA~
-#>  9 poverty headcount ratio at rural poverty line (% of rural p~ SI_POV_RU~
-#> 10 poverty headcount ratio at urban poverty line (% of urban p~ SI_POV_UR~
-#> 11 poverty gap at $2.5 a day (ppp) (%)                          SI_POV_GA~
-#> 12 poverty gap at $4 a day (ppp) (%)                            SI_POV_GA~
-#> 13 poverty gap at $5 a day (ppp) (%)                            SI_POV_GA~
-#> 14 poverty headcount ratio at $2.5 a day (ppp) (% of populatio~ SI_POV_25~
-#> 15 poverty headcount ratio at $4 a day (ppp) (% of population)  SI_POV_4D~
-#> 16 poverty headcount ratio at $5 a day (ppp) (% of population)  SI_POV_5D~
+poverty_data <- fq_wb_search('poverty')
 
 # download data
 fq_wb(countries = 'cis', indicators = poverty_data$code, transform = 'rdiff') 
-#> # A tibble: 257 x 4
+#> # A tibble: 318 x 4
 #>    date       country indicator                              value
 #>    <date>     <fct>   <fct>                                  <dbl>
 #>  1 1998-12-31 Armenia Poverty gap at $1.25 a day (PPP) (%) -0.216 
@@ -117,7 +100,7 @@ fq_wb(countries = 'cis', indicators = poverty_data$code, transform = 'rdiff')
 #>  8 2006-12-31 Armenia Poverty gap at $1.25 a day (PPP) (%) -0.333 
 #>  9 2007-12-31 Armenia Poverty gap at $1.25 a day (PPP) (%) -0.167 
 #> 10 2008-12-31 Armenia Poverty gap at $1.25 a day (PPP) (%) -0.4   
-#> # ... with 247 more rows
+#> # ... with 308 more rows
 ```
 
 The data is tidy and ready to be used with the `%>%` operatior.
