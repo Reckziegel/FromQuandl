@@ -47,9 +47,6 @@
 #' @export
 #'
 #' @examples
-#' # Download the Savings and the Current Account for all countries in the G7
-#' fq_imf(countries = 'g7', indicators = c('NGSD_NGDP', 'BCA_NGDPD'))
-#'
 #' # Download the US Output Gap
 #' fq_imf('United States', 'NGAP_NPGDP')
 #'

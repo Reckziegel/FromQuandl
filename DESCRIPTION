@@ -1,7 +1,7 @@
 Package: FromQuandl
 Type: Package
 Title: Makes Easier to Download IMF and World Bank Data From Quandl
-Version: 0.1.0
+Version: 0.1.0.9000
 Author: Bernardo Reckziegel
 Maintainer: Bernardo Reckziegel <bernardo_cse@hotmail.com>
 Description: FromQuandl package is designed to minimize the efforts
@@ -27,5 +27,4 @@ Imports:
     tidyr,
     crayon
 Suggests:
-    ggplot2,
     testthat

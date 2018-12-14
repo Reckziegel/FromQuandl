@@ -81,15 +81,6 @@ The full list can be seen at: \url{https://docs.quandl.com/docs/r}.
 }
 }
 \examples{
-# load the package
-library(FromQuandl)
-
-# Download the 1 year return of Real effective exchange rate index for all Advanced Economies.
-fq_wb('ae', list('PX_REX_REER'), verbose = FALSE, transform = 'rdiff')
-
-# Downlaod the Control of Corruption Estimate in the US
-fq_wb('USA', 'CC_EST')
-
 # Download al indicators related to Rule of Law for the G7 countries from 2010 ownwards...
 fq_wb(countries  = 'g7',
       indicators = c('RL_EST', 'RL_NO_SRC', 'RL_PER_RNK', 'RL_STD_ERR'),

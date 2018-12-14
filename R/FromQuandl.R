@@ -7,5 +7,6 @@
 #' }
 #'
 #' @docType package
+#'
 #' @name FromQuandl
 NULL

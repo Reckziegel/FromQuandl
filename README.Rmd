@@ -17,6 +17,8 @@ knitr::opts_chunk$set(
 
 # FromQuandl
 
+[![Waffle.io - Columns and their card count](https://badge.waffle.io/Reckziegel/FromQuandl.svg?columns=all)](https://waffle.io/Reckziegel/FromQuandl) 
+
 The goal of FromQuandl is to easy the search, download and data preprocessing steps that often happen when using the `Quandl` package in R.
 
 Currently supports functions for IMF and World Bank datasets.
