@@ -36,11 +36,11 @@ devtools::install_github("Reckziegel/FromQuandl")
 
 ## Examples
 
-Suppose you would like to download the Current Account Balance (as % of GDP) for all countries of a specific region or with similar economic characteristics, like the G7. Use the `imf_search()` function to discover the Current Account code in `Quandl`. 
+Suppose you would like to download the Current Account Balance (as % of GDP) for all countries of a specific region or with similar economic characteristics, like the G7. Use the `fq_imf_search()` function to discover the Current Account code in `Quandl`. 
 
 ```{r example0}
 library(FromQuandl)
-imf_search('account')
+fq_imf_search('account')
 ```
 
 Next use `fq_imf()` to download and plot the data. 
@@ -77,7 +77,7 @@ As a second example imagine that you want to downalod the rate of change in pove
 #library(FromQuandl)
 
 # get poverty codes
-poverty_data <- wb_search('poverty')
+poverty_data <- fq_wb_search('poverty')
 
 # download data
 fq_wb(countries = 'cis', indicators = poverty_data$code, transform = 'rdiff') 
@@ -86,8 +86,4 @@ fq_wb(countries = 'cis', indicators = poverty_data$code, transform = 'rdiff')
 
 The data is tidy and ready to be used with the `%>%` operatior.   
 
-Additional information about the `fq_imf()`and `fq_wb()` can be found at the package documenation.
-
-## Future Developments
-
-This is a work in progress. Very soon the package will have a function to download the components of the most important stock indexes in US. Suggestions are welcome, :-).
+Additional information about the `fq_imf()`, `fq_wb()` and `fq_yale()` can be found at the package documenation.
