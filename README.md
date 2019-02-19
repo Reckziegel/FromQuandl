@@ -4,6 +4,11 @@ FromQuandl
 ==========
 
 [![Waffle.io - Columns and their card count](https://badge.waffle.io/Reckziegel/FromQuandl.svg?columns=all)](https://waffle.io/Reckziegel/FromQuandl)
+<<<<<<< HEAD
+=======
+
+The goal of FromQuandl is to easy the search, download and data preprocessing steps that often happen when using the `Quandl` package in R.
+>>>>>>> ec7669d9848b63978ed26cfdaa5b769f6850543e
 
 The goal of `FromQuandl` is to easy the search, download and data preprocessing steps that often happen when using the `Quandl` package in R.
 
@@ -87,7 +92,11 @@ poverty_data <- fq_wb_search('poverty')
 
 # download data
 fq_wb(countries = 'cis', indicators = poverty_data$code, transform = 'rdiff') 
+<<<<<<< HEAD
 #> # A tibble: 178 x 4
+=======
+#> # A tibble: 318 x 4
+>>>>>>> ec7669d9848b63978ed26cfdaa5b769f6850543e
 #>    date       country indicator                              value
 #>    <date>     <fct>   <fct>                                  <dbl>
 #>  1 1998-12-31 Armenia Poverty gap at $1.25 a day (PPP) (%) -0.216 
@@ -100,7 +109,11 @@ fq_wb(countries = 'cis', indicators = poverty_data$code, transform = 'rdiff')
 #>  8 2006-12-31 Armenia Poverty gap at $1.25 a day (PPP) (%) -0.333 
 #>  9 2007-12-31 Armenia Poverty gap at $1.25 a day (PPP) (%) -0.167 
 #> 10 2008-12-31 Armenia Poverty gap at $1.25 a day (PPP) (%) -0.4   
+<<<<<<< HEAD
 #> # ... with 168 more rows
+=======
+#> # ... with 308 more rows
+>>>>>>> ec7669d9848b63978ed26cfdaa5b769f6850543e
 ```
 
 The data is tidy and ready to be used with the `%>%` operatior.
