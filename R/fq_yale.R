@@ -125,7 +125,7 @@ fq_yale <- function(indicators, verbose = TRUE, ...) {
       dplyr::mutate(
         download = purrr::map(
           .x = .data$download,
-          .f = ~ rename(
+          .f = ~ dplyr::rename(
             .data  = .x,
             date   = 1,
             value  = 2
