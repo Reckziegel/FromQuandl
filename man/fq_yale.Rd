@@ -24,5 +24,7 @@ Data provided for the US economy only.
 }
 \examples{
 # Ten-Year Average of Real Earnings for US Stock Data
-fq_yale("SP_10YRE")
+if (FALSE) {
+  fq_yale("SP_10YRE")
+}
 }
