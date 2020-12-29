@@ -56,8 +56,11 @@ The full list can be seen at: \url{https://docs.quandl.com/docs/r}.
 }
 \examples{
 # Download the US Output Gap
-fq_imf('United States', 'NGAP_NPGDP')
+if (FALSE) {
+  fq_imf('United States', 'NGAP_NPGDP')
 
 # The example above is identical to
 # fq_imf('USA', 'NGAP_NPGDP')
+
+}
 }

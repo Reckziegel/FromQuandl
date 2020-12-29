@@ -48,10 +48,13 @@
 #'
 #' @examples
 #' # Download the US Output Gap
-#' fq_imf('United States', 'NGAP_NPGDP')
+#' if (FALSE) {
+#'   fq_imf('United States', 'NGAP_NPGDP')
 #'
 #' # The example above is identical to
 #' # fq_imf('USA', 'NGAP_NPGDP')
+#'
+#' }
 fq_imf <- function(countries, indicators, verbose = TRUE, ...) {
 
   # checking errors
@@ -129,7 +132,7 @@ fq_imf <- function(countries, indicators, verbose = TRUE, ...) {
     # error
   } else {
 
-    stop('Country not covered by World Bank.')
+    stop('Country not covered by the IMF.', call. = FALSE)
 
   }
 
@@ -144,9 +147,9 @@ fq_imf <- function(countries, indicators, verbose = TRUE, ...) {
 
   # data wrangling
   database <- database %>%
-    tidyr::nest(.data$quandl_code) %>%
+    tidyr::nest(data = .data$quandl_code) %>%
 
-    # map the selected code thought the diserided countries
+    # map the selected code thought the desired countries
     dplyr::mutate(
       download = purrr::map(
         .x = .data$data,

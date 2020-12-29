@@ -3,3 +3,7 @@
 ^data-raw$
 ^README\.Rmd$
 ^README-.*\.png$
+^\.github$
+^\.travis\.yml$
+^appveyor\.yml$
+^codecov\.yml$

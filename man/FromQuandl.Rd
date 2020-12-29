@@ -3,11 +3,7 @@
 \docType{package}
 \name{FromQuandl}
 \alias{FromQuandl}
-\alias{FromQuandl-package}
 \title{FromQuandl: A package that make it easier to download bundles of data from Quandl.}
-\description{
-FromQuandl: A package that make it easier to download bundles of data from Quandl.
-}
 \section{FromQuandl functions}{
 
 \itemize{

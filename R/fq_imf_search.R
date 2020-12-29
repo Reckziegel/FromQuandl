@@ -32,7 +32,7 @@ fq_imf_search <- function(...) {
   }
 
   if (purrr::is_empty(.dots)) {
-    stop("Must provide a query.")
+    stop("Must provide a query.", call. = FALSE)
   }
 
 
@@ -81,7 +81,7 @@ fq_imf_search <- function(...) {
     # otherwise return the output
   } else {
 
-    return(imf_datasets_filtered)
+    imf_datasets_filtered
 
   }
 

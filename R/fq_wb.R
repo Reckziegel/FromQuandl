@@ -74,10 +74,13 @@
 #' @export
 #'
 #' @examples
-#' # Download al indicators related to Rule of Law for the G7 countries from 2010 ownwards...
-#' fq_wb(countries  = 'g7',
-#'       indicators = c('RL_EST', 'RL_NO_SRC', 'RL_PER_RNK', 'RL_STD_ERR'),
-#'       start_date = '2010-01-01')
+#'
+#' if (FALSE) {
+#'   # Download al indicators related to Rule of Law for the G7 countries from 2010 ownwards...
+#'   fq_wb(countries  = 'g7',
+#'         indicators = c('RL_EST', 'RL_NO_SRC'),
+#'         start_date = '2010-01-01')
+#' }
 fq_wb <- function(countries, indicators, verbose = TRUE, ...) {
 
   # checking errors
@@ -158,7 +161,7 @@ fq_wb <- function(countries, indicators, verbose = TRUE, ...) {
 
   # data wrangling
   database <- database %>%
-    tidyr::nest(.data$quandl_code) %>%
+    tidyr::nest(data = .data$quandl_code) %>%
 
     # map the selected code thought the selected countries
     dplyr::mutate(

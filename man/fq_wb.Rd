@@ -81,8 +81,11 @@ The full list can be seen at: \url{https://docs.quandl.com/docs/r}.
 }
 }
 \examples{
-# Download al indicators related to Rule of Law for the G7 countries from 2010 ownwards...
-fq_wb(countries  = 'g7',
-      indicators = c('RL_EST', 'RL_NO_SRC', 'RL_PER_RNK', 'RL_STD_ERR'),
-      start_date = '2010-01-01')
+
+if (FALSE) {
+  # Download al indicators related to Rule of Law for the G7 countries from 2010 ownwards...
+  fq_wb(countries  = 'g7',
+        indicators = c('RL_EST', 'RL_NO_SRC'),
+        start_date = '2010-01-01')
+}
 }

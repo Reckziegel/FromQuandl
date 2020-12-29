@@ -25,6 +25,7 @@ fq_yale <- function(indicators, verbose = TRUE, ...) {
   if (purrr::is_null(indicators)) {
     stop('Must provide an indicator.')
   }
+  assertthat::assert_that(assertthat::is.flag(verbose))
 
   # tidy eval
   dots_expr <- dplyr::enquos(...)
@@ -32,7 +33,10 @@ fq_yale <- function(indicators, verbose = TRUE, ...) {
   # check if order = 'asc'
   if ((!purrr::is_null(dots_expr[['order']])) && dots_expr[['order']][[2]] != "asc" && verbose) {
 
-    warning("To keep consistency with other tidy functions it will be set ", crayon::green("order = 'asc'."))
+    warning(
+      "To keep consistency with other tidy functions it will be set ", crayon::green("order = 'asc'."),
+      immediate. = TRUE
+    )
 
     dots_expr[["order"]] <- NULL
 
@@ -53,7 +57,7 @@ fq_yale <- function(indicators, verbose = TRUE, ...) {
 
   # data wrangling
   database <- database %>%
-    tidyr::nest(.data$quandl_code) %>%
+    tidyr::nest(data = .data$quandl_code) %>%
 
     # map the selected code thought the diserided countries
     dplyr::mutate(
@@ -74,7 +78,7 @@ fq_yale <- function(indicators, verbose = TRUE, ...) {
 
     if (all(dplyr::select(database, .data$verify_download) == FALSE)) {
 
-      stop('All downloads have failed.')
+      stop('All downloads have failed.', call. = FALSE)
 
     } else {
 
@@ -112,8 +116,10 @@ fq_yale <- function(indicators, verbose = TRUE, ...) {
 
     if (!purrr::is_empty(dots_expr)) {
 
-      stop("It was not possible to complete the download. \n",
-           "Please check if the arguments passed to ... are valid ones. Maybe there is a typo.")
+      stop(
+        "It was not possible to complete the download. \n",
+        "Please check if the arguments passed to ... are valid ones. Maybe there is a typo."
+      )
 
     }
 

@@ -11,7 +11,7 @@ Description: FromQuandl package is designed to minimize the efforts
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 Depends:
     R (>= 3.5.0)
 Imports:
@@ -25,6 +25,9 @@ Imports:
     stringr,
     tibble,
     tidyr,
-    crayon
+    crayon,
+    assertthat (>= 0.2.1),
+    lubridate (>= 1.7.9.2)
 Suggests:
-    testthat
+    testthat,
+    covr
