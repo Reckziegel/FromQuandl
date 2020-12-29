@@ -50,22 +50,22 @@ Next use `fq_imf()` to download and plot the data.
 
 ``` r
 
-ca <- fq_imf(countries = 'cis', indicators = 'BCA_NGDPD', start_date = '2005-01-01')
+ca <- fq_imf(countries = 'g7', indicators = 'BCA_NGDPD', start_date = '2005-01-01')
 ca
-#> # A tibble: 220 x 4
+#> # A tibble: 140 x 4
 #>    date       country indicator                          value
 #>    <date>     <fct>   <fct>                              <dbl>
-#>  1 2005-12-31 Armenia Current Account Balance, % of GDP  -2.53
-#>  2 2006-12-31 Armenia Current Account Balance, % of GDP  -2.40
-#>  3 2007-12-31 Armenia Current Account Balance, % of GDP  -7.36
-#>  4 2008-12-31 Armenia Current Account Balance, % of GDP -14.2 
-#>  5 2009-12-31 Armenia Current Account Balance, % of GDP -16.5 
-#>  6 2010-12-31 Armenia Current Account Balance, % of GDP -13.6 
-#>  7 2011-12-31 Armenia Current Account Balance, % of GDP -10.4 
-#>  8 2012-12-31 Armenia Current Account Balance, % of GDP  -9.96
-#>  9 2013-12-31 Armenia Current Account Balance, % of GDP  -7.31
-#> 10 2014-12-31 Armenia Current Account Balance, % of GDP  -7.77
-#> # ... with 210 more rows
+#>  1 2005-12-31 Canada  Current Account Balance, % of GDP  1.93 
+#>  2 2006-12-31 Canada  Current Account Balance, % of GDP  1.44 
+#>  3 2007-12-31 Canada  Current Account Balance, % of GDP  0.823
+#>  4 2008-12-31 Canada  Current Account Balance, % of GDP  0.147
+#>  5 2009-12-31 Canada  Current Account Balance, % of GDP -2.91 
+#>  6 2010-12-31 Canada  Current Account Balance, % of GDP -3.56 
+#>  7 2011-12-31 Canada  Current Account Balance, % of GDP -2.71 
+#>  8 2012-12-31 Canada  Current Account Balance, % of GDP -3.53 
+#>  9 2013-12-31 Canada  Current Account Balance, % of GDP -3.14 
+#> 10 2014-12-31 Canada  Current Account Balance, % of GDP -2.32 
+#> # ... with 130 more rows
 
 ca %>%
   ggplot(aes(x = date, y = value, color = country)) + 
@@ -73,7 +73,7 @@ ca %>%
   geom_hline(aes(yintercept = 0), color = 'red', linetype = 'dashed', alpha = 0.3) +
   facet_wrap(~country, scale = "free_y") +
   labs(title    = "Current Account Balance (% of GDP)",
-       subtitle = "G7 Countries From 2005-01-01 through 2018-09-10",
+       subtitle = "G7 Countries From 2005-01-01 through 2020-12-01",
        caption  = "Source: International Monetary Found (IMF), Quandl.com.") +
   theme_fivethirtyeight() +
   scale_color_gdocs()
